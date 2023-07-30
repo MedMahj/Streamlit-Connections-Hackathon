@@ -1,6 +1,6 @@
 # My files
-.streamlit/secrets.toml
-
+#*/.streamlit/secrets.toml
+.streamlit
 
 
 .DS_Store
