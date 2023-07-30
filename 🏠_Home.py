@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     """
 
-    [The link to GitHub repository.](https://docs.streamlit.io/library/api-reference/connections)
+    [The link to GitHub repository.](https://github.com/MedMahj/Streamlit-Connections-Hackathon)
 
     """
     
