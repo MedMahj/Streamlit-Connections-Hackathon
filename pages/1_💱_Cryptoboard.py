@@ -47,7 +47,7 @@ if __name__ == "__main__":
     #conn = BinanceConnection('binance')
 
     df = conn.get(symbol=symbol_option, interval=interval_option, limit=LIMIT)
-    #st.dataframe(df)
+    st.dataframe(df)
 
     st.subheader(symbol_option)
 
