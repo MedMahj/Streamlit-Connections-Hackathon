@@ -50,7 +50,7 @@ class BinanceAPI(ExperimentalBaseConnection):
             # create 'Open_date' column
             df['Open_date'] = (df['Open_time']).apply(datetime.fromtimestamp)
 
-            return df
+            return data
         
         return _get( **kwargs)
 
