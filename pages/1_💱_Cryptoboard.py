@@ -47,10 +47,10 @@ if __name__ == "__main__":
     with col2:
         interval_option = st.selectbox('Choose Time Interval :',INTERVALS)
     with col3:
-        limit_option = st.selectbox('Choose Limit :',LIMITS)
+        limit_option = st.selectbox('Choose Limit :',LIMITS, index=2)
     
-    conn = st.experimental_connection(name='binance', type=BinanceAPI)
-    #conn = BinanceConnection('binance')
+    #conn = st.experimental_connection(name='binance', type=BinanceAPI)
+    conn = BinanceAPI('binance')
 
     df = conn.get(symbol=symbol_option, interval=interval_option, limit=limit_option)
     st.dataframe(df)
