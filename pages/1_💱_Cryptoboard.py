@@ -35,18 +35,24 @@ if __name__ == "__main__":
                 '15m',
                 '1h', 
                 '1d']
-    LIMIT = 100
+    LIMITS = [10,
+              50,
+              100,
+              500,
+              1000]
 
-    col1, col2 = st.columns([1,1])
+    col1, col2, col3 = st.columns([1,1,1])
     with col1:
         symbol_option = st.selectbox('Choose Symbol :',SYMBOLS)
     with col2:
         interval_option = st.selectbox('Choose Time Interval :',INTERVALS)
+    with col3:
+        limit_option = st.selectbox('Choose Limit :',LIMITS)
     
     conn = st.experimental_connection(name='binance', type=BinanceAPI)
     #conn = BinanceConnection('binance')
 
-    df = conn.get(symbol=symbol_option, interval=interval_option, limit=LIMIT)
+    df = conn.get(symbol=symbol_option, interval=interval_option, limit=limit_option)
     st.dataframe(df)
 
     st.subheader(symbol_option)
