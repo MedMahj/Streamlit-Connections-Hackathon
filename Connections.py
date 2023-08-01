@@ -1,8 +1,39 @@
 import streamlit as st
 from streamlit.connections import ExperimentalBaseConnection
-import requests
+import requests, json
 import pandas as pd
 from datetime import datetime
+
+
+class OpenWeatherConnection(ExperimentalBaseConnection):
+
+    def _connect(self, **kwargs) -> None:
+        if 'api_key' in kwargs:
+            st.session_state.ow_api_key = kwargs.pop('api_key')
+        else:
+            st.session_state.ow_api_key = self._secrets['api_key']
+        return None
+    
+    def get(self, city :str, ttl: int = 3600, **kwargs) -> json:
+        @st.cache_data(ttl=ttl)
+        def _get(city :str, **kwargs) -> json:
+            # API key 
+            api_key = st.session_state.ow_api_key
+            # base_url variable to store url
+            base_url = "http://api.openweathermap.org/data/2.5/weather?"
+            # complete url address
+            complete_url = base_url + "appid=" + api_key + "&q=" + city
+            # get method of requests module
+            # return response object
+            response = requests.get(complete_url)
+            # json method of response object
+            # convert json format data into
+            # python format data
+            data = response.json()
+            return data
+        return _get(city, **kwargs)
+ 
+    
 
 
 class BinanceAPI(ExperimentalBaseConnection):
@@ -16,7 +47,7 @@ class BinanceAPI(ExperimentalBaseConnection):
 
         api_url = "https://api.binance.com/api/v3/klines?symbol={}&interval={}&limit={}".format(symbol, interval, limit)
 
-        #@cache_data(ttl=ttl)
+        @st.cache_data(ttl=ttl)
         def _get(url :str =api_url, **kwargs) -> pd.DataFrame:
 
             data = requests.get(url).json()

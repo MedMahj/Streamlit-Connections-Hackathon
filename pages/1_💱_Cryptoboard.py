@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # Change buttons style
     cf.change_button_style()
     
-    
+
     SYMBOLS = ['BTCBUSD',
            'BNBBUSD',
            'ETHBUSD',
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     conn = BinanceAPI('binance')
 
     df = conn.get(symbol=symbol_option, interval=interval_option, limit=limit_option)
-    st.dataframe(df)
+    #st.dataframe(df)
 
     st.subheader(symbol_option)
 
