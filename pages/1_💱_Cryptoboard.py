@@ -22,9 +22,7 @@ if __name__ == "__main__":
     # Change buttons style
     cf.change_button_style()
     
-    # Add page title
-    #st.markdown("<h1 style='text-align:center; border-radius:25px; background-color:#f3feff; color:#0493ab; margin-bottom: 25px;'>Cryptoboard</h1>", unsafe_allow_html=True)
-
+    
     SYMBOLS = ['BTCBUSD',
            'BNBBUSD',
            'ETHBUSD',
