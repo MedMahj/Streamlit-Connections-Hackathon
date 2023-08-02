@@ -1,3 +1,4 @@
+import streamlit as st
 from streamlit.connections import ExperimentalBaseConnection
 import requests
 import pandas as pd
@@ -18,7 +19,7 @@ class BinanceConnection(ExperimentalBaseConnection):
 
     def get(self, ttl: int = 3600, **kwargs) -> pd.DataFrame:
 
-        @cache_data(ttl=ttl)
+        @st.cache_data(ttl=ttl)
         def _get(url :str, **kwargs) -> pd.DataFrame:
 
             data = requests.get(url).json()
