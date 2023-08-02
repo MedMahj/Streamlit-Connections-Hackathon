@@ -16,7 +16,7 @@ class OpenWeatherConnection(ExperimentalBaseConnection):
         return None
     
     def get(self, city :str, units :str, ttl: int = 3600, **kwargs) -> json:
-        #@st.cache_data(ttl=ttl)
+        @st.cache_data(ttl=ttl)
         def _get(city :str, units :str, **kwargs) -> json:
             # API key 
             api_key = os.environ['API_KEY']

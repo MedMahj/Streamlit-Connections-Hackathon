@@ -48,6 +48,7 @@ def display_weather(data, units):
 
         city = data["name"]
         time = datetime.fromtimestamp(data["dt"])
+        st.write(time )
 
         unit_str = " °C" if units == "metric" else " °F"
  
@@ -55,7 +56,7 @@ def display_weather(data, units):
         col1, col2, col3 = st.columns([2,3,1])
         col1.metric(label="City 🌎", value=city)
         col2.metric(label="Weather ⛅", value=weather_description)
-        col3.metric(label="Time 🕗", value=str(time.hour)+":"+str(time.minute))
+        col3.metric(label="Time(UTC) 🕗", value=str(time)[-8:-3])
         
 
         col1, col2, col3 = st.columns([2,3,1])
