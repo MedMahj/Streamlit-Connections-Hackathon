@@ -3,53 +3,45 @@ from streamlit_extras.switch_page_button import switch_page
 import pandas as pd
 from datetime import datetime
 
-
-
 # My packages
-import Commun_Functions as cf
+import Style_Functions as sf
 from Connections import OpenWeatherConnection
 
 
 def display_weather(data, units):
     '''
+    This function used to display weather data
+    Input:
+         - data(json): contains response of openweather API
     '''
     # Check the value of "cod" key is equal to
-    # "404", means city is found otherwise,
+    # "200", means city is found otherwise,
     # city is not found
     if str(data["cod"]) == "200":
- 
-        # store the value of "main"
-        # key in variable y
-        main = data["main"]
- 
-        # store the value corresponding
-        # to the "temp" key of y
-        current_temperature = main["temp"]
- 
-        # store the value corresponding
-        # to the "pressure" key of y
-        current_pressure = main["pressure"]
- 
-        # store the value corresponding
-        # to the "humidity" key of y
-        current_humidity = main["humidity"]
- 
-        # store the value of "weather"
-        # key in variable z
-        weather = data["weather"]
- 
-        # store the value corresponding
-        # to the "description" key at
-        # the 0th index of z
-        weather_description = weather[0]["description"]
 
+        # store the value corresponding to the city "name"
+        city = data["name"]
+
+        # store the value corresponding to the city location (Lon & lat)
         lon = data["coord"]["lon"]
         lat = data["coord"]["lat"]
-
-        city = data["name"]
+        
+        # store and transform weather time
         time = datetime.fromtimestamp(data["dt"])
-        st.write(time )
-
+ 
+        # store the value corresponding to the "temp"
+        current_temperature = data["main"]["temp"]
+ 
+        # store the value corresponding to the "pressure" 
+        current_pressure = data["main"]["pressure"]
+ 
+        # store the value corresponding to the "humidity"
+        current_humidity = data["main"]["humidity"]
+ 
+        # store the value corresponding to the "weather description" 
+        weather_description = data["weather"][0]["description"]
+        
+        # temperature unit
         unit_str = " °C" if units == "metric" else " °F"
  
         # display following values
@@ -58,13 +50,11 @@ def display_weather(data, units):
         col2.metric(label="Weather ⛅", value=weather_description)
         col3.metric(label="Time(UTC) 🕗", value=str(time)[-8:-3])
         
-
         col1, col2, col3 = st.columns([2,3,1])
         col1.metric(label="Temperature 🌡️", value=str(current_temperature) + unit_str)
         col2.metric(label="Atmospheric Pressure 💨", value=str(current_pressure) +" hPa")
         col3.metric(label="Humidity 💦", value=str(current_humidity) +" %")
         
-
         # display city map
         df = pd.DataFrame([[lat , lon]], columns=['LAT', 'LON'])
         st.map(df, zoom=6)
@@ -83,13 +73,13 @@ def display_weather(data, units):
 if __name__ == "__main__":
 
     # Set page config
-    cf.display_page_config('Weatherboard','⛅')
+    sf.display_page_config('Current Weather','⛅')
 
     # Add page title
-    cf.add_page_title('Weatherboard')
+    sf.add_page_title('Current Weather')
 
     # Change buttons style
-    cf.change_button_style()
+    sf.change_button_style()
 
     # initialize OpenWeather connection
     conn = st.experimental_connection("openweather", type=OpenWeatherConnection)
@@ -105,25 +95,10 @@ if __name__ == "__main__":
     # Extract data from API
     data = conn.get(city, units)
     
-    #data
-
     # display weather
     display_weather(data, units)
 
-    
-    
-    #API_key=""
-    #find_weather(API_key)
-
-    #url = f"http://api.openweathermap.org/data/2.5/forecast?id=524901&appid{API_key}"
-    #data = requests.get(url).json()
-    #data
-
-    #url = "https://api.binance.com/api/v3/klines?symbol=BTCBUSD&interval=1d&limit=10"
-    #data = requests.get(url).json()
-    #data
-
-
+    # back home page
     col1, col2, col3 = st.columns([3,2,3])
     with col2:
         if st.button('🏠 Back Home', use_container_width=True):

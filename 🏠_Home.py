@@ -3,19 +3,19 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 # My packages
-import Commun_Functions as cf
+import Style_Functions as sf
 
 
 if __name__ == "__main__":
 
     # Set page config
-    cf.display_page_config()
+    sf.display_page_config()
     
     # Add page title
-    cf.add_page_title()
+    sf.add_page_title()
 
     # Change buttons style
-    cf.change_button_style()
+    sf.change_button_style()
 
     """
 
@@ -36,8 +36,8 @@ if __name__ == "__main__":
         if st.button('💱 Cryptoboard', use_container_width=True):
             switch_page('Cryptoboard')
     
-        if st.button('⛅ Weatherboard', use_container_width=True):
-            switch_page('Weatherboard')
+        if st.button('⛅ Current Weather', use_container_width=True):
+            switch_page('Current Weather')
 
         if st.button('🗄️ Database', use_container_width=True):
             switch_page('Database')
