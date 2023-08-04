@@ -5,7 +5,39 @@ import requests, json
 import pandas as pd
 from datetime import datetime
 import pymongo
-#from qdrant_client import QdrantClient
+
+
+class MongoConnection(ExperimentalBaseConnection[pymongo.MongoClient]):
+    """Basic st.experimental_connection implementation for MongoDB"""
+
+    def _connect(self, **kwargs) -> pymongo.MongoClient:
+        if 'database' in kwargs:
+            db = kwargs.pop('database')
+        else:
+            db = self._secrets['database']
+        return pymongo.MongoClient(db, **kwargs)
+    
+    def insert_csv(self, database: str, collection: str, csv_file: str, **kwargs) -> None:
+        db = self._connect()[database]
+        coll = db[collection]
+        data = pd.read_csv(csv_file).to_dict('record')
+        coll.insert_many(data)
+    
+    def find(self, database: str, collection: str, symbol: str, interval: str, limit: int = 100, ttl: int = 3600, **kwargs) -> pd.DataFrame:
+        @st.cache_data(ttl=ttl)
+        def _find(database :str, collection :str, symbol: str, interval: str, limit: int = 100, **kwargs) -> pd.DataFrame:
+            db = self._connect()[database]
+            coll = db[collection]
+            data = coll.find({"Symbol" : symbol, "Interval" : interval}, {"_id":0}).sort("Open_date", -1).limit(limit)
+            df = pd.DataFrame(data)
+            return df 
+        return  _find(database, collection, symbol, interval, limit, **kwargs)
+    
+    def count_documents(self, database: str, collection: str, **kwargs) -> int:
+        db = self._connect()[database]
+        coll = db[collection]
+        nbr = coll.count_documents({})
+        return nbr
 
 
 class OpenWeatherConnection(ExperimentalBaseConnection):
@@ -38,75 +70,12 @@ class OpenWeatherConnection(ExperimentalBaseConnection):
         return _get(city, units, **kwargs)
 
 
-class QdrantConnection(ExperimentalBaseConnection):
-    """Basic st.experimental_connection implementation for Qdrant"""
-
-    def _connect(self, **kwargs) :
-        
-        if 'cluster' in kwargs:
-            clt = kwargs.pop('cluster')
-        else:
-            clt = self._secrets['cluster']
-
-        if 'api_key' in kwargs:
-            key = kwargs.pop('api_key')
-        else:
-            key = self._secrets['api_key']
-    
-        return QdrantClient(url=clt, prefer_grpc=True,api_key=key)
-    
-
-    def query(self, query: str, ttl: int = 3600, **kwargs) -> pd.DataFrame:
-        @st.cache_data(ttl=ttl)
-        def _query(query: str, **kwargs) -> pd.DataFrame:
-            cursor = self.cursor()
-            cursor.execute(query, **kwargs)
-            return cursor.df()
-        
-        return _query(query, **kwargs)
-
-class MongoConnection(ExperimentalBaseConnection[pymongo.MongoClient]):
-    """Basic st.experimental_connection implementation for Qdrant"""
-
-    def _connect(self, **kwargs) -> pymongo.MongoClient:
-        if 'database' in kwargs:
-            db = kwargs.pop('database')
-        else:
-            db = self._secrets['database']
-        return pymongo.MongoClient(db, **kwargs)
-    
-    def insert_csv(self, database :str, collection :str, csv_file : str, **kwargs) -> None:
-        """  """
-        db = self[database]
-        coll = db[collection]
-        data = pd.read_csv(csv_file).to_dict('record')
-        coll.insert_many(data)
-    
-    def find(self, symbol: str, interval: str, ttl: int = 3600, **kwargs):
-        @st.cache_data(ttl=ttl)
-        def _find(symbol: str, interval: str, **kwargs) -> pd.DataFrame:
-
-            return df 
-        return  _find(symbol, interval, **kwargs)
-
-    
-
-    def query(self, query: str, ttl: int = 3600, **kwargs) -> pd.DataFrame:
-        @st.cache_data(ttl=ttl)
-        def _query(query: str, **kwargs) -> pd.DataFrame:
-            cursor = self.cursor()
-            cursor.execute(query, **kwargs)
-            return cursor.df()
-        
-        return _query(query, **kwargs)
-
 
 class BinanceAPI(ExperimentalBaseConnection):
+    """Basic st.experimental_connection implementation for Binance API"""
 
     def _connect(self) :
-
         return None
-
 
     def get(self,symbol: str, interval: str, limit: int = 1000, ttl: int = 1, **kwargs) -> pd.DataFrame:
 
@@ -185,7 +154,6 @@ class BinanceAPI(ExperimentalBaseConnection):
                 url = "https://api.binance.com/api/v3/klines?symbol={}&interval={}&limit={}".format(symbol, interval, limit)
                 data = requests.get(url).json()
 
-            
                 # create DataFrame from data
                 df_temp = pd.DataFrame(data, columns=Binance_Columns_name)
 

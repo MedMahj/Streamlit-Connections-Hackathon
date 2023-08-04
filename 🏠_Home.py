@@ -19,14 +19,12 @@ if __name__ == "__main__":
 
     """
 
-    This demo app shows three different ways to create data connection using `st.experimental_connection` and showcases the functionality of each connection :
+    This demo app presents two different ways to create data connection using `st.experimental_connection` and showcases the functionality of each connection :
 
-    - **Public API** : [Binance API](https://binance-docs.github.io/apidocs/spot/en/#introduction) used to extract Klines data and create a Cryptoboard.
-    - **Secured API** :
-    - **Database** :
-
-    👇 Click on the button to see how it works!
-
+    - **Database** : [MongoDB Atlas](https://www.mongodb.com/atlas) used to extract Klines data from database and display **Cryptoboard**.
+    - **Secured API** : [OpenWeatherMap API](https://openweathermap.org/api) used to extract Weather data and display **Current Weather**.
+  
+    👇 Click on the buttons to see how it works!
 
     """
     
@@ -38,9 +36,6 @@ if __name__ == "__main__":
     
         if st.button('⛅ Current Weather', use_container_width=True):
             switch_page('Current Weather')
-
-        if st.button('🗄️ Database', use_container_width=True):
-            switch_page('Database')
     
 
     """
