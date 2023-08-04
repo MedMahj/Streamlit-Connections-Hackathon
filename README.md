@@ -25,5 +25,7 @@ This app has two new connection classes built by extending the built-in `Experim
 > * ` _connect` : used to set up connection to OpenWeatherMap using API Key.
 > * `get` : used to extract weather data with specific parameters (city, units).
 
+You can find the app deployed on Streamlit Cloud 😉 : [Connection App.](https://connections-app.streamlit.app/)
+
   
     
