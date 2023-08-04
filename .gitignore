@@ -1,6 +1,6 @@
-etl_klines.py
+ETL_klines.py
+CryptoBinance.py
 secrets.toml
-data/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

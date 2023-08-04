@@ -73,7 +73,22 @@ class MongoConnection(ExperimentalBaseConnection[pymongo.MongoClient]):
             db = kwargs.pop('database')
         else:
             db = self._secrets['database']
-        return pymongo.MongoClient(database=db, **kwargs)
+        return pymongo.MongoClient(db, **kwargs)
+    
+    def insert_csv(self, database :str, collection :str, csv_file : str, **kwargs) -> None:
+        """  """
+        db = self[database]
+        coll = db[collection]
+        data = pd.read_csv(csv_file).to_dict('record')
+        coll.insert_many(data)
+    
+    def find(self, symbol: str, interval: str, ttl: int = 3600, **kwargs):
+        @st.cache_data(ttl=ttl)
+        def _find(symbol: str, interval: str, **kwargs) -> pd.DataFrame:
+
+            return df 
+        return  _find(symbol, interval, **kwargs)
+
     
 
     def query(self, query: str, ttl: int = 3600, **kwargs) -> pd.DataFrame:
