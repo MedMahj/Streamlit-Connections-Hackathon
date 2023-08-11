@@ -68,16 +68,12 @@ if __name__ == "__main__":
         st.error("An Invalid URI host error was received. Is your MongoDB host name correct in your connection string?", icon="🚨")
         st.stop()
 
-    #st.write(conn)
-    #st.help(conn)
-
-    
-    
     database = "Binance"
     collection = "Klines"
+    csv_file = "./data/klines.csv"
 
     try:
-        nbr = conn.count_documents("Binance", "Klines")
+        nbr = conn.count_documents(database, collection)
         assert nbr > 0
     except AssertionError:
         st.warning('Your database is empty ! Click on the button below to insert data to your database :', icon="⚠️") 
@@ -85,7 +81,7 @@ if __name__ == "__main__":
         with col2:
             if st.button('⬇️ Insert Data', use_container_width=True):
                 with st.spinner('Loading...'):
-                    conn.insert_csv("Binance", "Klines", "./data/klines.csv")
+                    conn.insert_csv(database, collection, csv_file)
                 switch_page('Cryptoboard')
         st.stop()
 
@@ -117,21 +113,6 @@ if __name__ == "__main__":
     display_klines(df)
 
    
-
-
-    
-
-
-
-
-
-
-   
-    
-
-    
-
-
     col1, col2, col3 = st.columns([3,2,3])
     with col2:
         if st.button('🏠 Back Home', use_container_width=True):

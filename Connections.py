@@ -17,6 +17,12 @@ class MongoConnection(ExperimentalBaseConnection[pymongo.MongoClient]):
             db = self._secrets['database']
         return pymongo.MongoClient(db, **kwargs)
     
+    def cursor(self, database: str, collection: str , **kwargs) :
+        db = self._connect()[database]
+        coll = db[collection]
+        return coll.find()
+
+
     def insert_csv(self, database: str, collection: str, csv_file: str, **kwargs) -> None:
         db = self._connect()[database]
         coll = db[collection]
